@@ -1,0 +1,4 @@
+# This OnDemand app configuration uses sub-apps by default to allow for custom
+# sub-apps. The default configuration is in `local/generic.yml.erb`, which is
+# the file that should be referenced for creating a new sub-app with this
+# configuration.
