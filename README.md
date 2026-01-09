@@ -28,9 +28,9 @@ This repository should be added to the OnDemand app configuration. By default, t
 Additionally, the spack and mamba environments need to be installed:
 
 ```
-$ JID=$(sbatch --mem=16g -c 8 installSpackEnvironment.sh mamba)
+$ JID=$(sbatch --parsable --mem=16g -c 8 installSpackEnvironment.sh mamba)
 
-$ sbatch installMambaEnvironment.sh <filepath>
+$ sbatch  --dependency=afterok:$JID installMambaEnvironment.sh <filepath>
 ```
 
 For more details on the spack and mamba environment install scripts, keep reading.
