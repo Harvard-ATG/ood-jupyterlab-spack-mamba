@@ -1,0 +1,61 @@
+#!/usr/bin/env bash
+
+this_script="template/script.sh.erb"
+
+log() {
+    echo -e "[$(date -Iseconds)][${this_script}] $1"
+}
+
+# Benchmark info
+log "Starting main script"
+
+log "HOME=$HOME"
+
+# Set working directory to home directory
+cd "${HOME}"
+
+# Select spack and mamba environment based on form selection
+log "Spack install location directive from form: <%= context.environment %>"
+if [[ "<%= context.environment %>" == "course" ]]; then
+    # spack_root="/shared/courseSharedFolders/<%= context.course %>outer/<%= context.course %>/spack"
+    spack_root="/shared/spack"
+    spack_environment="<%= context.spack %>"
+    mamba_environment="/shared/courseSharedFolders/<%= context.course %>outer/<%= context.course %>/<%= context.mamba %>"
+    # Check user access to mamba environment
+    echo "Running ls on $mamba_environment to check permissions"
+    ls $mamba_environment
+else
+    spack_root="/shared/spack"
+    spack_environment="<%= context.spack %>"
+    mamba_environment="<%= context.mamba %>"
+fi
+
+# Load spack
+log "Spack root: $spack_root"
+. $spack_root/share/spack/setup-env.sh
+log "Activated spack install"
+
+#
+# Start Jupyter Notebook Server
+#
+
+# Load the required environment
+log "Loading spack environment: $spack_environment"
+spack env activate $spack_environment
+log "Spack environment loaded"
+
+# List loaded modules
+spack find
+
+# Benchmark info
+log "Starting jupyter..."
+
+# Activate mamba environment
+log "Loading mamba environment: $mamba_environment"
+set -x
+eval "$(mamba shell hook --shell bash)"
+mamba activate $mamba_environment
+set +x
+
+# Launch the Jupyter Lab Server
+jupyter lab --config="${CONFIG_FILE}" <%= context.extra_jupyter_args %>
