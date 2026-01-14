@@ -1,0 +1,118 @@
+# Batch Connect app configuration file
+#
+# @note Used to define the submitted cluster, title, description, and
+#   hard-coded/user-defined attributes that make up this Batch Connect app.
+<%-
+def arrays_have_common_element(array1, array2)
+  # Use the `&` operator to get the intersection of the two arrays
+  # If the intersection is not empty, return true, otherwise false
+  !(array1 & array2).empty?
+end
+
+userGroups = OodSupport::User.new.groups.sort_by(&:id).map(&:name)
+# First check if the user is in an admin group
+adminGroups = [
+  "ondemand-admins-1025174" # HUIT OOD admin group, prod environment
+]
+if arrays_have_common_element(userGroups, adminGroups)
+  cluster="*"
+else
+  # If the user is not in an admin group, check if they're in an authorized Canvas group
+  userCanvasGroups = userGroups.flat_map{ |str| str.scan(/^canvas(\d+)-\d+/) }.flatten
+  enabledGroups = [
+    # Cannot have other enabled groups if a course installation is in use
+    # This is because the course installation uses the course shared folder,
+    # which is not accessible to users outside of that course.
+    "166005" # BST 236: Computing I
+  ]
+
+  # Check if the groups that the user is in match any of the courses that should
+  # have access to this app.
+
+  if arrays_have_common_element(userGroups, enabledGroups)
+    cluster="*"
+  else
+    cluster="disable_this_app"
+  end
+end
+-%>
+---
+
+# **MUST** set cluster id here that matches cluster configuration file located
+# under /etc/ood/config/clusters.d/*.yml
+cluster: "<%= cluster %>"
+
+title: "Jupyter Lab - BST 236 (GPU)"
+description: |
+  This app is configured for GPU access for BST 236.
+
+  This app will launch a Jupyter Notebook server on one or more nodes. This
+  configuration uses [Spack](https://spack.io/) to load a
+  [Mamba](https://mamba.readthedocs.io/en/latest/index.html) environment to then load Jupyter Lab and 
+  was built for the course BST 236.<br/><br/>The
+  app launches outside of a container, so it has access to slurm commands, but
+  since the app is running as a slurm job, the `srun` command will use the
+  resources of the current job, rather than starting a new job. That is, unless
+  you first run an `salloc` command to allocate a new interactive session.
+
+# Do not cache the application form
+# The intent is to revert to the default Number of CPUs and Hours each time.
+cacheable: false
+
+# Define attribute values that aren't meant to be modified by the user within
+# the Dashboard form
+attributes:
+  course: "166005"
+  spack: "mamba"
+  mamba: "bst236"
+  bc_queue: "gpu"
+  environment:
+    widget: "radio_button"
+    value: "course"
+    help: |
+      Choose the environment used to launch Jupyter Lab. The "Course"
+      environment is managed by the teaching staff and has the latest
+      dependencies, while the "Global" environment is managed at the system
+      level and provides the initial set of dependencies.
+    options:
+      - ["Course (course managed)", "course"]
+      - ["Global (system managed)", "global"]
+
+  custom_num_cores: 8
+  custom_num_gpus: 1
+  # custom_num_cores:
+  #   widget: "number_field"
+  #   label: "Number of CPUs"
+  #   value: 1
+  #   min: 1
+  #   max: 4
+  #   step: 1
+
+  bc_num_hours:
+    value: 2
+    min: 1
+    max: 6  # 6 hours max
+    step: 1
+
+  # Any extra command line arguments to feed to the `jupyter notebook ...`
+  # command that launches the Jupyter notebook within the batch job
+  extra_jupyter_args: ""
+
+# All of the attributes that make up the Dashboard form (in respective order),
+# and made available to the submit configuration file and the template ERB
+# files
+#
+# @note You typically do not need to modify this unless you want to add a new
+#   configurable value
+# @note If an attribute listed below is hard-coded above in the `attributes`
+#   option, then it will not appear in the form page that the user sees in the
+#   Dashboard
+form:
+  - course
+  - spack
+  - mamba
+  - environment
+  - bc_queue
+  - extra_jupyter_args
+  - bc_num_hours
+  - custom_num_cores
