@@ -29,7 +29,7 @@ source /shared/spack/share/spack/setup-env.sh
 spack env activate mamba
 
 # Create environment from environment.yml with parallel jobs
-mamba env create -f "$ENV_FILE" -j $SLURM_CPUS_PER_TASK
+mamba env create -f "$ENV_FILE"
 
 echo "Environment installation complete!"
 echo "To use: mamba activate <env_name>"
