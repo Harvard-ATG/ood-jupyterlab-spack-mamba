@@ -75,9 +75,8 @@ echo "Starting installation..."
 if [ -n "$INSTALL_PATH" ]; then
     # Install to specific path
     echo "Installing to path: $INSTALL_PATH"
-    mamba env create -f "$ENV_FILE" --prefix "$INSTALL_PATH"
     
-    if [ $? -eq 0 ]; then
+    if mamba env create -f "$ENV_FILE" --prefix "$INSTALL_PATH"; then
         echo ""
         echo "✅ Environment installation complete!"
         echo "   Location: $INSTALL_PATH"
@@ -90,12 +89,12 @@ if [ -n "$INSTALL_PATH" ]; then
     fi
 else
     # Install by name (default location)
-    mamba env create -f "$ENV_FILE"
+    echo "Installing by name from environment.yml"
+
+    if mamba env create -f "$ENV_FILE"; then
+        # Extract environment name from yml file
+        ENV_NAME=$(grep "^name:" "$ENV_FILE" | awk '{print $2}')
     
-    # Extract environment name from yml file
-    ENV_NAME=$(grep "^name:" "$ENV_FILE" | awk '{print $2}')
-    
-    if [ $? -eq 0 ]; then
         if [ -z "$ENV_NAME" ]; then
             echo "Warning: Could not determine environment name from file"
             ENV_NAME="<unknown>"
