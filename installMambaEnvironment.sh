@@ -48,6 +48,15 @@ fi
 # Load spack and mamba
 source /shared/spack/share/spack/setup-env.sh
 
+# Verify spack loaded
+if ! command -v spack &> /dev/null; then
+    echo "Error: Failed to load spack"
+    echo "Check that /shared/spack/share/spack/setup-env.sh exists"
+    exit 1
+fi
+
+echo "Spack loaded successfully"
+
 # Check if spack environment exists
 if ! spack env list | grep -q "\<$SPACK_ENV\>"; then
     echo "Error: Spack environment '$SPACK_ENV' not found"
