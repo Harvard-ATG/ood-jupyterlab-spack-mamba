@@ -20,7 +20,7 @@ enabledGroups = [
   # shared folder is in use. This is because the course installation uses the 
   # course shared folder, which is not accessible to users outside of that 
   # course.
-  "159536" #E-PSCI101
+  "159536" #EPS 101
 ]
 
 def arrays_have_common_element(array1, array2)
@@ -54,10 +54,9 @@ end
 # a non-existant cluster.
 cluster: "<%= cluster %>"
 
-title: "Jupyter Lab - E-SPCI101 "
+title: "Jupyter Lab - EPS 101 "
 description: |
-  This app is not configured for any particular course. It is an example app 
-  with a minimal configuration.
+  This app is configured for EPS 101: Global Warming Science 101.
 
   This app will launch a Jupyter Notebook server on one or more nodes. This
   configuration uses [Spack](https://spack.io/) to load a
@@ -80,7 +79,7 @@ cacheable: false
 attributes:
   # Canvas course ID, used to reference a course shared folder when a spack 
   # installation in the course shared folder is in use.
-  course: "159536" # EPSCI101
+  course: "159536" # EPS 101
 
   # Spack environment to activate, regardless of which Spack installation is in use.
   spack: "mamba"
