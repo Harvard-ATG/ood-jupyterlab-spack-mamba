@@ -57,14 +57,6 @@ fi
 
 echo "Spack loaded successfully"
 
-# Check if spack environment exists
-if ! spack env list | grep -q "\<$SPACK_ENV\>"; then
-    echo "Error: Spack environment '$SPACK_ENV' not found"
-    echo "Available environments:"
-    spack env list
-    exit 1
-fi
-
 # Activate spack environment
 spack env activate $SPACK_ENV
 
