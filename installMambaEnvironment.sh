@@ -49,7 +49,7 @@ fi
 source /shared/spack/share/spack/setup-env.sh
 
 # Check if spack environment exists
-if ! spack env list | grep -q "^$SPACK_ENV$"; then
+if ! spack env list | grep -q "\<$SPACK_ENV\>"; then
     echo "Error: Spack environment '$SPACK_ENV' not found"
     echo "Available environments:"
     spack env list
