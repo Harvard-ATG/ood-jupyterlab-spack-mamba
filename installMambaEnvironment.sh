@@ -58,7 +58,7 @@ fi
 echo "Spack loaded successfully"
 
 # Activate spack environment
-spack env activate $SPACK_ENV
+spack env activate "$SPACK_ENV"
 
 # Verify mamba is available
 if ! command -v mamba &> /dev/null; then
