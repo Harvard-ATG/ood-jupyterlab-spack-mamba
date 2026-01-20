@@ -22,7 +22,7 @@ if [ -z "$1" ]; then
     echo "  sbatch installMambaEnvironment.sh environment.yml"
     echo ""
     echo "  # Install to specific path:"
-    echo "  sbatch installMambaEnvironment.sh environment.yml mamba-gpu /shared/courseSharedFolders/165993outer/165993/bst236"
+    echo "  sbatch installMambaEnvironment.sh environment.yml mamba-gpu /shared/courseSharedFolders/166005outer/166005/bst236"
     exit 1
 fi
 
