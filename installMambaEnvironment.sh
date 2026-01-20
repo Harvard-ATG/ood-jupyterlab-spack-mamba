@@ -7,30 +7,57 @@
 #SBATCH --cpus-per-task=4
 #SBATCH --mem=8G
 
-# Check if environment file was provided
-if [ -z "$1" ]; then
-    echo "Error: No environment file provided"
-    echo "Usage: sbatch installMambaEnvironment.sh <path_to_environment.yml> [spack_env_name] [install_path]"
+# Default values
+SPACK_ENV="mamba"
+INSTALL_PATH=""
+ENV_NAME_OVERRIDE=""
+
+# Usage function
+usage() {
+    echo "Usage: sbatch installMambaEnvironment.sh -f <environment.yml> [options]"
     echo ""
-    echo "Arguments:"
-    echo "  path_to_environment.yml : Path to environment.yml file (required)"
-    echo "  spack_env_name         : Spack environment to use (default: mamba)"
-    echo "  install_path           : Path to install mamba environment (optional)"
+    echo "Required:"
+    echo "  -f FILE        Path to environment.yml file"
+    echo ""
+    echo "Options:"
+    echo "  -s ENV         Spack environment name (default: mamba)"
+    echo "  -p PATH        Install to specific path"
+    echo "  -n NAME        Override environment name"
+    echo "  -h             Show this help"
     echo ""
     echo "Examples:"
-    echo "  # Install by name (from yml file):"
-    echo "  sbatch installMambaEnvironment.sh environment.yml"
+    echo "  # Install by name from yml:"
+    echo "  sbatch installMambaEnvironment.sh -f environment.yml"
+    echo ""
+    echo "  # Install with custom name:"
+    echo "  sbatch installMambaEnvironment.sh -f environment.yml -n bst236-cpu"
     echo ""
     echo "  # Install to specific path:"
-    echo "  sbatch installMambaEnvironment.sh environment.yml mamba-gpu /shared/courseSharedFolders/166005outer/166005/bst236"
+    echo "  sbatch installMambaEnvironment.sh -f environment.yml -p /shared/.../bst236-gpu"
+    echo ""
+    echo "  # Use different spack env with custom name:"
+    echo "  sbatch installMambaEnvironment.sh -f environment.yml -s mamba-gpu -n bst236-gpu"
     exit 1
+}
+
+# Parse arguments
+while getopts "f:s:p:n:h" opt; do
+    case $opt in
+        f) ENV_FILE="$OPTARG" ;;
+        s) SPACK_ENV="$OPTARG" ;;
+        p) INSTALL_PATH="$OPTARG" ;;
+        n) ENV_NAME_OVERRIDE="$OPTARG" ;;
+        h) usage ;;
+        *) usage ;;
+    esac
+done
+
+# Check required arguments
+if [ -z "$ENV_FILE" ]; then
+    echo "Error: environment.yml file required"
+    usage
 fi
 
-ENV_FILE=$1
-SPACK_ENV=${2:-mamba}  # Default to 'mamba' if not provided
-INSTALL_PATH=$3        # Optional: path to install environment
-
-# Check if file exists
 if [ ! -f "$ENV_FILE" ]; then
     echo "Error: Environment file '$ENV_FILE' not found"
     exit 1
@@ -39,25 +66,8 @@ fi
 echo "Installing environment from: $ENV_FILE"
 echo "Using Spack environment: $SPACK_ENV"
 
-if [ -n "$INSTALL_PATH" ]; then
-    echo "Install location: $INSTALL_PATH"
-else
-    echo "Install location: Default (by environment name)"
-fi
-
 # Load spack and mamba
 source /shared/spack/share/spack/setup-env.sh
-
-# Verify spack loaded
-if ! command -v spack &> /dev/null; then
-    echo "Error: Failed to load spack"
-    echo "Check that /shared/spack/share/spack/setup-env.sh exists"
-    exit 1
-fi
-
-echo "Spack loaded successfully"
-
-# Activate spack environment
 spack env activate "$SPACK_ENV"
 
 # Verify mamba is available
@@ -71,43 +81,32 @@ echo "Mamba version: $(mamba --version)"
 echo ""
 echo "Starting installation..."
 
-# Create environment from environment.yml
+# Determine installation method
 if [ -n "$INSTALL_PATH" ]; then
-    # Install to specific path
     echo "Installing to path: $INSTALL_PATH"
-    
-    if mamba env create -f "$ENV_FILE" --prefix "$INSTALL_PATH"; then
-        echo ""
-        echo "✅ Environment installation complete!"
-        echo "   Location: $INSTALL_PATH"
-        echo ""
-        echo "To use:"
-        echo "   mamba activate $INSTALL_PATH"
-    else
-        echo "❌ Environment installation failed!"
-        exit 1
-    fi
-else
-    # Install by name (default location)
-    echo "Installing by name from environment.yml"
+    mamba env create -f "$ENV_FILE" --prefix "$INSTALL_PATH"
+    ACTIVATION="mamba activate $INSTALL_PATH"
 
-    if mamba env create -f "$ENV_FILE"; then
-        # Extract environment name from yml file
-        ENV_NAME=$(grep "^name:" "$ENV_FILE" | awk '{print $2}')
-    
-        if [ -z "$ENV_NAME" ]; then
-            echo "Warning: Could not determine environment name from file"
-            ENV_NAME="<unknown>"
-        fi
-        
-        echo ""
-        echo "✅ Environment installation complete!"
-        echo "   Name: $ENV_NAME"
-        echo ""
-        echo "To use:"
-        echo "   mamba activate $ENV_NAME"
-    else
-        echo "❌ Environment installation failed!"
-        exit 1
-    fi
+elif [ -n "$ENV_NAME_OVERRIDE" ]; then
+    echo "Installing with custom name: $ENV_NAME_OVERRIDE"
+    mamba env create -f "$ENV_FILE" -n "$ENV_NAME_OVERRIDE"
+    ACTIVATION="mamba activate $ENV_NAME_OVERRIDE"
+
+else
+    echo "Installing by name from environment.yml"
+    mamba env create -f "$ENV_FILE"
+    ENV_NAME=$(grep "^name:" "$ENV_FILE" | awk '{print $2}')
+    ACTIVATION="mamba activate ${ENV_NAME:-<unknown>}"
+fi
+
+if [ $? -eq 0 ]; then
+    echo ""
+    echo "✅ Environment installation complete!"
+    echo "   Name: $ENV_NAME"
+    echo ""
+    echo "To use:"
+    echo "   mamba activate $ENV_NAME"
+else
+    echo "❌ Environment installation failed!"
+    exit 1
 fi
