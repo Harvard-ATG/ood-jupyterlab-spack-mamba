@@ -102,10 +102,7 @@ fi
 if [ $? -eq 0 ]; then
     echo ""
     echo "✅ Environment installation complete!"
-    echo "   Name: $ENV_NAME"
     echo ""
-    echo "To use:"
-    echo "   mamba activate $ENV_NAME"
 else
     echo "❌ Environment installation failed!"
     exit 1
