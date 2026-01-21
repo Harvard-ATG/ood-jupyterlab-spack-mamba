@@ -7,6 +7,8 @@
 #SBATCH --cpus-per-task=4
 #SBATCH --mem=8G
 
+#Created with help of claude 4.5 AI Model
+
 # Default values
 SPACK_ENV="mamba"
 INSTALL_PATH=""
