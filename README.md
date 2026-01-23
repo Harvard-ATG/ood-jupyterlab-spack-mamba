@@ -30,7 +30,7 @@ Additionally, the spack and mamba environments need to be installed:
 ```
 $ JID=$(sbatch --parsable --mem=16g -c 8 installSpackEnvironment.sh mamba)
 
-$ sbatch  --dependency=afterok:$JID installMambaEnvironment.sh <filepath>
+$ sbatch  --dependency=afterok:$JID installMambaEnvironment.sh -f <environment.yml file path>
 ```
 
 For more details on the spack and mamba environment install scripts, keep reading.
@@ -60,5 +60,15 @@ mamba env create --file mamba-environment/jupyter/environment.yml
 Or run the utility script with `sbatch`:
 
 ```
-sbatch installMambaEnvironment.sh  /mamba-environment/cs109a/environment.yml
+sbatch installMambaEnvironment.sh -f /mamba-environment/cs109a/environment.yml
 ```
+Note: the utility script can take the following flags:
+
+Required
+- `-f` FILE        Path to environment.yml file"
+
+Optional
+- `-s` ENV         Spack environment name (default: mamba)"
+- `-p` PATH        Install to specific path"
+- `-n` NAME        Override environment name"
+- `-h`             Show this help"
