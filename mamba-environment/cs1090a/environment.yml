@@ -1,0 +1,32 @@
+name: cs1090a
+
+channels: 
+  - conda-forge 
+
+dependencies: 
+  - aiohttp 
+  - arviz 
+  - beautifulsoup4 
+  - imageio 
+  - ipython 
+  - jupyterlab 
+  - lxml 
+  - matplotlib>=3.10 
+  - numpy>=2.3 
+  - openpyxl 
+  - pandas 
+  - pillow 
+  - pip 
+  - pyarrow 
+  - python>=3.10 
+  - requests 
+  - scikit-learn>=1.7 
+  - scipy>=1.6 
+  - seaborn 
+  - selenium 
+  - statsmodels 
+  - pip: 
+    - nbopen 
+    - otter-grader>=6.1 
+    - jupyterlab-vim 
+    - tensorflow_datasets
