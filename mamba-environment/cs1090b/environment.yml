@@ -30,7 +30,6 @@ dependencies:
   - tqdm
   - pytorch==2.1.0
   - pip:
-    - gap-stat
     - nbopen
     - opencv-python
     - otter-grader
