@@ -98,16 +98,12 @@ attributes:
   # course has no intention of managing their own Spack environments, this can 
   # be hard-coded to "global".
   environment:
-    widget: "radio_button"
     value: "course"
     help: |
-      Choose the environment used to launch Jupyter Lab. The "Course"
-      environment is managed by the teaching staff and has the latest
-      dependencies, while the "Global" environment is managed at the system
-      level and provides the initial set of dependencies. Each session will have 1 GPU allocated, 12 CPU cores and 48GB of memory.
-    options:
-      - ["Course (course managed)", "course"]
-      - ["Global (system managed)", "global"]
+      The "Course" environment is managed by the teaching staff and has the latest
+      dependencies.
+      Each session will have 1 GPU allocated, 12 CPU cores and 48GB of memory.
+
 
   # How many CPU cores to include in the slurm job submission
   custom_num_cores: 12
