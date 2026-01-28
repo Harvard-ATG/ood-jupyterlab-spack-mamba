@@ -1,32 +1,35 @@
-name: cs1090a
-
-channels: 
-  - conda-forge 
-
-dependencies: 
-  - aiohttp 
-  - arviz 
-  - beautifulsoup4 
-  - imageio 
-  - ipython 
-  - jupyterlab 
-  - lxml 
-  - matplotlib>=3.10 
-  - numpy>=2.3 
-  - openpyxl 
-  - pandas 
-  - pillow 
-  - pip 
-  - pyarrow 
-  - python>=3.10 
-  - requests 
-  - scikit-learn>=1.7 
-  - scipy>=1.6 
-  - seaborn 
-  - selenium 
-  - statsmodels 
-  - pip: 
-    - nbopen 
-    - otter-grader>=6.1 
-    - jupyterlab-vim 
-    - tensorflow_datasets
+dependencies:
+  - aiohttp
+  - arviz
+  - beautifulsoup4
+  - imageio
+  - jupyterlab
+  - lxml
+  - matplotlib
+  - networkx
+  - nltk
+  - numpy
+  - pandas
+  - pillow
+  - pip
+  - pymc
+  - python>=3.10
+  - requests
+  - scipy
+  - scikit-image
+  - scikit-learn
+  - seaborn
+  - selenium
+  - statsmodels
+  - tensorflow==2.15.0
+  - tqdm
+  - pytorch==2.1.0
+  - pip:
+    - gap-stat
+    - nbopen
+    - opencv-python
+    - otter-grader
+    - tensorflow_addons==0.23.0
+    - tensorflow_datasets==4.9.4
+    - tensorflow_hub==0.16.0
+    - tf_keras_vis==0.8.6 # also adds keras
