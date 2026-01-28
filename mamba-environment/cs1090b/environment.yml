@@ -30,7 +30,7 @@ dependencies:
     - transformers==4.37.0
 
     - pip:
-      - gap-stat==2.0.3
+      # - gap-stat==2.0.3
       - opencv-python==4.11.0
       - nbopen==0.7
       - otter-grader==5.2.3
