@@ -16,6 +16,7 @@ dependencies:
     - pillow==10.2.0
     - pip==23.3.2
     - plotly==5.18.0
+    - protobuf>=3.20.3,<5.0.0
     - python==3.11.7
     - pymc==5.10.3
     - requests==2.31.0
@@ -30,8 +31,7 @@ dependencies:
     - transformers==4.37.0
 
     - pip:
-      # - gap-stat==2.0.3
-      - opencv-python==4.11.0
+      - opencv-python-headless==4.9.0.80
       - nbopen==0.7
       - otter-grader==5.2.3
       - tensorflow_addons==0.23.0
