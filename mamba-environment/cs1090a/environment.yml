@@ -4,34 +4,36 @@ channels:
 - conda-forge
 
 dependencies:
-  - aiohttp 
-  - arviz 
-  - beautifulsoup4 
-  - imageio 
-  - ipython 
-  - jupyterlab 
-  - lxml 
+  - aiohttp
+  - arviz
+  - beautifulsoup4
+  - imageio
+  - ipython
+  - jupyterlab
+  - lxml
   - matplotlib>=3.10
   - numpy<2.0.0,>=1.23.5
-  - openpyxl 
-  - pandas 
-  - pillow 
-  - pip 
-  - protobuf>=3.19.6,<4.25
-  - pyarrow 
+  - openpyxl
+  - pandas
+  - pillow
+  - pip
+  - pymc
+  - pyarrow
   - python>=3.10
-  - requests 
-  - scikit-learn>=1.7 
-  - scipy>=1.6 
-  - seaborn 
-  - selenium 
+  - requests
+  - scikit-learn>=1.7
+  - scipy>=1.6
+  - seaborn
+  - selenium
   - statsmodels
-  - wrapt<1.15,>=1.11.0
   - tensorflow==2.15.0
-  
+  - tqdm
+  - pytorch==2.1.0
+
   - pip:
     - nbopen
     - opencv-python-headless==4.9.0.80
     - otter-grader>=6.1
-    - jupyterlab-vim
-    - tensorflow_datasets
+    - tensorflow_datasets==4.9.4
+    - tensorflow_hub==0.16.0
+    - tf_keras_vis==0.8.6 # also adds keras
