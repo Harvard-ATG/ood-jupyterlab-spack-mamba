@@ -12,7 +12,7 @@ dependencies:
   - jupyterlab
   - lxml
   - matplotlib>=3.10
-  - numpy<2.0.0,>=1.23.5
+  - numpy
   - openpyxl
   - pandas
   - pillow
