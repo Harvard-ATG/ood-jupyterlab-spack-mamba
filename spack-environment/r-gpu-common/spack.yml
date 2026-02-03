@@ -1,0 +1,84 @@
+# -------------------------------------------------------------------------
+# CONCEPTUAL OVERVIEW: THE "SIDECAR" MODEL
+# -------------------------------------------------------------------------
+# Goal: Provide a high-performance R environment with GPU capabilities that
+#       runs alongside, but independent of, the main Course Python environment.
+#
+# Lifecycle:
+#   1. Creation:     Spack reads this file to build the R stack, compiling
+#                    XGBoost against the specific system CUDA drivers.
+#   2. Registration: The `installRSidecar.sh` script executes the build and
+#                    registers the resulting R binary as a global Jupyter Kernel.
+#   3. Usage:        JupyterLab (running in the Mamba env) detects this Kernel,
+#                    allowing students to switch languages seamlessly without
+#                    needing to restart their server or switch containers.
+# -------------------------------------------------------------------------
+
+# -------------------------------------------------------------------------
+# ARCHITECTURAL DECISION RECORD
+# -------------------------------------------------------------------------
+# We are using Spack (not Mamba) to manage R for this course.
+#
+# Reason 1: Performance & Optimization
+#           Spack compiles R from source, allowing it to link against system-specific
+#           optimized BLAS/LAPACK libraries rather than generic pre-compiled binaries.
+#           Reference: R Installation and Administration Manual, Sec 2.9 (Shared BLAS)
+#           "The use of an optimized BLAS library can offer considerable speed gains."
+#           https://cran.r-project.org/doc/manuals/R-admin.html#BLAS
+#
+# Reason 2: GPU Support (The '+cuda' Variant)
+#           XGBoost GPU support requires compiling C++ kernels against the specific
+#           NVIDIA CUDA Toolkit available on the host. Generic Conda binaries often
+#           mismatch the host driver version. Spack's '+cuda' variant ensures the
+#           '-DUSE_CUDA=ON' CMake flag is set and linked correctly.
+#           Reference: XGBoost Documentation (Build from Source)
+#           "To enable GPU support... the CUDA Toolkit is required."
+#           https://xgboost.readthedocs.io/en/stable/build.html#building-with-gpu-support
+#
+# Reason 3: Stability & Isolation
+#           By decoupling the R engine from the Python (Mamba) environment, we avoid
+#           "Dependency Hell" where Python updates break R libraries (or vice versa).
+#           Spack environments are fully concretized and independent.
+#           Reference: Spack Documentation (Environments)
+#           "Environments allow you to group together a set of specs... and lock them."
+#           https://spack.readthedocs.io/en/latest/environments.html
+#
+# Reason 4: Lifecycle Management (One-Time Build)
+#           This environment is designed to be built once via batch job (`sbatch`)
+#           on a compute node. This offloads the heavy compilation from the head node
+#           and results in a static artifact that can be reused by multiple courses
+#           without requiring re-installation or per-student replication.
+# -------------------------------------------------------------------------
+
+spack:
+  specs:
+  # --- The Bridge ---
+  # r-irkernel is required to expose this R installation to Jupyter.
+  # Without this, we cannot register the kernel in the 'installRSidecar.sh' script.
+  # Reference: https://github.com/IRkernel/IRkernel
+  - r-irkernel
+
+  # --- The Engine ---
+  # The base R language. Spack will compile this against the system compilers (gcc)
+  # for maximum efficiency on the specific node architecture (e.g., Zen2/Skylake).
+  - r-base
+
+  # --- The Data Science Core ---
+  # Standard Tidyverse suite (ggplot2, dplyr, etc.).
+  - r-tidyverse
+
+  # --- The GPU Component ---
+  # This is the critical piece. We explicitly request the '+cuda' variant.
+  # This triggers the specific build logic defined in Spack's package recipe:
+  # 'depends_on("cuda", when="+cuda")' and 'args.append("-DUSE_CUDA=ON")'.
+  # See: https://packages.spack.io/package.html?name=r-xgboost
+  - r-xgboost +cuda
+
+  # --- Configuration ---
+  # Create a single view (directory tree) of all installed packages for easy inspection.
+  view: true
+
+  # Unify ensures that all packages in this environment share the exact same version
+  # of common dependencies (like zlib or openssl) to prevent symbol conflicts.
+  concretizer:
+    unify: true
