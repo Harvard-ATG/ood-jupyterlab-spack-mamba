@@ -81,4 +81,4 @@ spack:
   # Unify ensures that all packages in this environment share the exact same version
   # of common dependencies (like zlib or openssl) to prevent symbol conflicts.
   concretizer:
-    unify: true
+    unify: when_possible
