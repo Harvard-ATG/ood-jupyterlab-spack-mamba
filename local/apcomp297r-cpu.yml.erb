@@ -85,7 +85,7 @@ attributes:
   spack: "mamba"
 
   # mamba environment to activate from inside the Spack environment
-  mamba: "apcomp297r-cpu"
+  mamba: "cs1090b-cpu" # Assuming this mamba environment is built and already created in the spack mamba environment
 
   # Which queue to submit to. Usually `general` is the best choice, unless this 
   # app is configured for a specific EC2 instance type, like an instance type 
@@ -97,17 +97,8 @@ attributes:
   # installation and a spack installation in the course shared folder. If the 
   # course has no intention of managing their own Spack environments, this can 
   # be hard-coded to "global".
-  environment:
-    widget: "radio_button"
-    value: "course"
-    help: |
-      Choose the environment used to launch Jupyter Lab. The "Course"
-      environment is managed by the teaching staff and has the latest
-      dependencies, while the "Global" environment is managed at the system
-      level and provides the initial set of dependencies.
-    options:
-      - ["Course (course managed)", "course"]
-      - ["Global (system managed)", "global"]
+  environment: "global"
+
 
   # How many GPU GRES resources to include in the job submission.
   custom_num_gpus: 0
