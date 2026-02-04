@@ -72,7 +72,7 @@ spack:
   # This triggers the specific build logic defined in Spack's package recipe:
   # 'depends_on("cuda", when="+cuda")' and 'args.append("-DUSE_CUDA=ON")'.
   # See: https://packages.spack.io/package.html?name=r-xgboost
-  - r-xgboost +cuda
+  - r-xgboost ^xgboost+cuda
 
   # --- Configuration ---
   # Create a single view (directory tree) of all installed packages for easy inspection.
