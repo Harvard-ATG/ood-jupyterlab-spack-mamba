@@ -72,9 +72,7 @@ spack:
   - r-parsnip    # The modeling interface (wraps xgboost)
   - r-recipes    # Data preprocessing and feature engineering
   - r-rsample    # Data splitting and resampling (cross-validation)
-  - r-yardstick  # Model metrics (AUC, RMSE, etc.)
   - r-tune       # Hyperparameter tuning
-  - r-workflows  # Bundles pre-processing and modeling
   - r-broom      # Converts model objects to tidy tables
 
   # --- The GPU Component ---
