@@ -7,6 +7,8 @@
 #SBATCH --cpus-per-task=4
 #SBATCH --mem=16G
 
+# Created with help of Gemini 3.0 Pro AI Model
+
 # -------------------------------------------------------------------------
 # SCRIPT: R Kernel Builder (Universal)
 # -------------------------------------------------------------------------
@@ -68,12 +70,22 @@ echo "================================================="
 source /shared/spack/share/spack/setup-env.sh
 
 # 2. Activate/Create Spack Env
+# Detect Configuration File (.yaml or .yml)
+if [ -f "$SPACK_YAML_DIR/spack.yaml" ]; then
+    CONFIG_FILE="$SPACK_YAML_DIR/spack.yaml"
+elif [ -f "$SPACK_YAML_DIR/spack.yml" ]; then
+    CONFIG_FILE="$SPACK_YAML_DIR/spack.yml"
+else
+    echo "❌ Error: No spack.yaml or spack.yml found in directory: $SPACK_YAML_DIR"
+    exit 1
+fi
+
 if spack env list | grep -q "^${ENV_NAME}$"; then
     echo "-> Activating existing Spack environment..."
     spack env activate "$ENV_NAME"
 else
-    echo "-> Creating new Spack environment..."
-    spack env create "$ENV_NAME" "$SPACK_YAML_DIR/spack.yaml"
+    echo "-> Creating new Spack environment from $CONFIG_FILE..."
+    spack env create "$ENV_NAME" "$CONFIG_FILE"
     spack env activate "$ENV_NAME"
 fi
 
