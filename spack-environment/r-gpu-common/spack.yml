@@ -52,43 +52,39 @@
 
 spack:
   # --- Global Rules ---
-  # These rules apply to ANY package built in this environment.
   packages:
-    # We strictly require that IF xgboost is built, it MUST have CUDA enabled.
-    # This ensures that r-xgboost links against a GPU-capable backend.
+    # Critical: Enforce CUDA on the backend C++ library
     xgboost:
       require:
       - +cuda
 
   specs:
   # --- The Bridge ---
-  # r-irkernel is required to expose this R installation to Jupyter.
-  # Without this, we cannot register the kernel in the shell script.
-  # Reference: https://github.com/IRkernel/IRkernel
   - r-irkernel
 
   # --- The Engine ---
-  # The base R language. Spack will compile this against system compilers (gcc)
-  # for maximum efficiency on the specific node architecture.
-  # Note: r-base implicitly pulls in 'r' as a virtual provider.
+  # Spack calls the R language package 'r' (not r-base)
   - r
 
-  # --- The Data Science Core ---
-  # Standard Tidyverse suite (ggplot2, dplyr, etc.).
-  - r-tidymodels
+  # --- The Machine Learning Core (Decomposed) ---
+  # Since 'r-tidymodels' meta-package is missing in Spack, we install
+  # the specific components required for ML workflows.
+  - r-parsnip    # The modeling interface (wraps xgboost)
+  - r-recipes    # Data preprocessing and feature engineering
+  - r-rsample    # Data splitting and resampling (cross-validation)
+  - r-yardstick  # Model metrics (AUC, RMSE, etc.)
+  - r-tune       # Hyperparameter tuning
+  - r-workflows  # Bundles pre-processing and modeling
+  - r-broom      # Converts model objects to tidy tables
 
   # --- The GPU Component ---
-  # We request the R interface for XGBoost.
-  # Note: We do NOT use ^xgboost+cuda here. Instead, the global 'packages'
-  # rule above automatically forces the underlying C++ library to use CUDA.
+  # The R interface for XGBoost. 
   - r-xgboost
 
   # --- Configuration ---
-  # Create a single view (directory tree) of all installed packages for easy inspection.
   view: true
-
-  # Unify ensures that all packages in this environment share the exact same version
-  # of common dependencies (like zlib or openssl) to prevent symbol conflicts.
-  # This is critical for stability but requires the simplified logic used above.
   concretizer:
-    unify: true
+    # "when_possible" allows Spack to resolve the complex dependency tree 
+    # of these ML packages + CUDA without crashing.
+    unify: when_possible
+
