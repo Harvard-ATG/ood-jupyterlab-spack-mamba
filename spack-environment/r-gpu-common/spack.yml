@@ -61,7 +61,7 @@ spack:
   # --- The Engine ---
   # The base R language. Spack will compile this against the system compilers (gcc)
   # for maximum efficiency on the specific node architecture (e.g., Zen2/Skylake).
-  - r-base
+  - r-base@4.4.1
 
   # --- The Data Science Core ---
   # Standard Tidyverse suite (ggplot2, dplyr, etc.).
@@ -81,4 +81,4 @@ spack:
   # Unify ensures that all packages in this environment share the exact same version
   # of common dependencies (like zlib or openssl) to prevent symbol conflicts.
   concretizer:
-    unify: when_possible
+    unify: true
