@@ -51,28 +51,37 @@
 # -------------------------------------------------------------------------
 
 spack:
+  # --- Global Rules ---
+  # These rules apply to ANY package built in this environment.
+  packages:
+    # We strictly require that IF xgboost is built, it MUST have CUDA enabled.
+    # This ensures that r-xgboost links against a GPU-capable backend.
+    xgboost:
+      require:
+      - +cuda
+
   specs:
   # --- The Bridge ---
   # r-irkernel is required to expose this R installation to Jupyter.
-  # Without this, we cannot register the kernel in the 'installRSidecar.sh' script.
+  # Without this, we cannot register the kernel in the shell script.
   # Reference: https://github.com/IRkernel/IRkernel
-  - r
+  - r-irkernel
 
   # --- The Engine ---
-  # The base R language. Spack will compile this against the system compilers (gcc)
-  # for maximum efficiency on the specific node architecture (e.g., Zen2/Skylake).
-  - r-irkernel
+  # The base R language. Spack will compile this against system compilers (gcc)
+  # for maximum efficiency on the specific node architecture.
+  # Note: r-base implicitly pulls in 'r' as a virtual provider.
+  - r-base
 
   # --- The Data Science Core ---
   # Standard Tidyverse suite (ggplot2, dplyr, etc.).
   - r-tidyverse
 
   # --- The GPU Component ---
-  # This is the critical piece. We explicitly request the '+cuda' variant.
-  # This triggers the specific build logic defined in Spack's package recipe:
-  # 'depends_on("cuda", when="+cuda")' and 'args.append("-DUSE_CUDA=ON")'.
-  # See: https://packages.spack.io/package.html?name=r-xgboost
-  - r-xgboost ^xgboost+cuda
+  # We request the R interface for XGBoost.
+  # Note: We do NOT use ^xgboost+cuda here. Instead, the global 'packages'
+  # rule above automatically forces the underlying C++ library to use CUDA.
+  - r-xgboost
 
   # --- Configuration ---
   # Create a single view (directory tree) of all installed packages for easy inspection.
@@ -80,5 +89,6 @@ spack:
 
   # Unify ensures that all packages in this environment share the exact same version
   # of common dependencies (like zlib or openssl) to prevent symbol conflicts.
+  # This is critical for stability but requires the simplified logic used above.
   concretizer:
     unify: true
