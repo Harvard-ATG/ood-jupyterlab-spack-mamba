@@ -69,10 +69,7 @@ spack:
   # --- The Machine Learning Core (Decomposed) ---
   # Since 'r-tidymodels' meta-package is missing in Spack, we install
   # the specific components required for ML workflows.
-  - r-parsnip    # The modeling interface (wraps xgboost)
   - r-recipes    # Data preprocessing and feature engineering
-  - r-rsample    # Data splitting and resampling (cross-validation)
-  - r-tune       # Hyperparameter tuning
   - r-broom      # Converts model objects to tidy tables
 
   # --- The GPU Component ---
