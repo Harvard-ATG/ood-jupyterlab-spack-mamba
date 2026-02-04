@@ -51,12 +51,16 @@
 # -------------------------------------------------------------------------
 
 spack:
-  # --- Global Rules ---
   packages:
-    # Critical: Enforce CUDA on the backend C++ library
+    # 1. Enforce GPU for XGBoost
     xgboost:
       require:
       - +cuda
+    
+    # 2. Force R to be the STABLE version
+    r:
+      require:
+      - "@4.4.1"
 
   specs:
   # --- The Bridge ---
@@ -64,7 +68,7 @@ spack:
 
   # --- The Engine ---
   # Spack calls the R language package 'r' (not r-base)
-  - r
+  - r@4.4.1
 
   # --- The Machine Learning Core (Decomposed) ---
   # Since 'r-tidymodels' meta-package is missing in Spack, we install
@@ -82,4 +86,3 @@ spack:
     # "when_possible" allows Spack to resolve the complex dependency tree 
     # of these ML packages + CUDA without crashing.
     unify: when_possible
-
