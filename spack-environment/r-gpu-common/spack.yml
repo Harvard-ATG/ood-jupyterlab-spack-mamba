@@ -71,11 +71,11 @@ spack:
   # The base R language. Spack will compile this against system compilers (gcc)
   # for maximum efficiency on the specific node architecture.
   # Note: r-base implicitly pulls in 'r' as a virtual provider.
-  - r-base
+  - r
 
   # --- The Data Science Core ---
   # Standard Tidyverse suite (ggplot2, dplyr, etc.).
-  - r-tidyverse
+  - r-tidymodels
 
   # --- The GPU Component ---
   # We request the R interface for XGBoost.
