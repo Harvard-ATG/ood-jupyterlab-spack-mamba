@@ -56,12 +56,12 @@ spack:
   # r-irkernel is required to expose this R installation to Jupyter.
   # Without this, we cannot register the kernel in the 'installRSidecar.sh' script.
   # Reference: https://github.com/IRkernel/IRkernel
-  - r-irkernel
+  - r
 
   # --- The Engine ---
   # The base R language. Spack will compile this against the system compilers (gcc)
   # for maximum efficiency on the specific node architecture (e.g., Zen2/Skylake).
-  - r-base@4.4.1
+  - r-irkernel
 
   # --- The Data Science Core ---
   # Standard Tidyverse suite (ggplot2, dplyr, etc.).
