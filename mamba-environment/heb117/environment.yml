@@ -16,3 +16,4 @@ dependencies:
 - r-base
 - r-irkernel
 - r-tidyverse
+- tzdata
