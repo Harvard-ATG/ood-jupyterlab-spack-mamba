@@ -13,6 +13,7 @@
 SPACK_ENV="mamba"
 INSTALL_PATH=""
 ENV_NAME_OVERRIDE=""
+FORCE=""
 
 # Usage function
 usage() {
@@ -25,6 +26,7 @@ usage() {
     echo "  -s ENV         Spack environment name (default: mamba)"
     echo "  -p PATH        Install to specific path"
     echo "  -n NAME        Override environment name"
+    echo "  -y             Overwrite an existing environment at the target prefix without prompting"
     echo "  -h             Show this help"
     echo ""
     echo "Examples:"
@@ -39,16 +41,20 @@ usage() {
     echo ""
     echo "  # Use different spack env with custom name:"
     echo "  sbatch installMambaEnvironment.sh -f environment.yml -s mamba-gpu -n bst236-gpu"
+    echo ""
+    echo "  # Re-install over an existing environment (e.g. to pick up a new activate.d hook):"
+    echo "  sbatch installMambaEnvironment.sh -f environment.yml -y"
     exit 1
 }
 
 # Parse arguments
-while getopts "f:s:p:n:h" opt; do
+while getopts "f:s:p:n:yh" opt; do
     case $opt in
         f) ENV_FILE="$OPTARG" ;;
         s) SPACK_ENV="$OPTARG" ;;
         p) INSTALL_PATH="$OPTARG" ;;
         n) ENV_NAME_OVERRIDE="$OPTARG" ;;
+        y) FORCE="--yes" ;;
         h) usage ;;
         *) usage ;;
     esac
@@ -86,22 +92,40 @@ echo "Starting installation..."
 # Determine installation method
 if [ -n "$INSTALL_PATH" ]; then
     echo "Installing to path: $INSTALL_PATH"
-    mamba env create -f "$ENV_FILE" --prefix "$INSTALL_PATH"
+    mamba env create -f "$ENV_FILE" --prefix "$INSTALL_PATH" $FORCE
+    INSTALL_STATUS=$?
     ACTIVATION="mamba activate $INSTALL_PATH"
+    ENV_PREFIX="$INSTALL_PATH"
 
 elif [ -n "$ENV_NAME_OVERRIDE" ]; then
     echo "Installing with custom name: $ENV_NAME_OVERRIDE"
-    mamba env create -f "$ENV_FILE" -n "$ENV_NAME_OVERRIDE"
+    mamba env create -f "$ENV_FILE" -n "$ENV_NAME_OVERRIDE" $FORCE
+    INSTALL_STATUS=$?
     ACTIVATION="mamba activate $ENV_NAME_OVERRIDE"
+    ENV_PREFIX=$(mamba run -n "$ENV_NAME_OVERRIDE" bash -c 'echo $CONDA_PREFIX')
 
 else
     echo "Installing by name from environment.yml"
-    mamba env create -f "$ENV_FILE"
+    mamba env create -f "$ENV_FILE" $FORCE
+    INSTALL_STATUS=$?
     ENV_NAME=$(grep "^name:" "$ENV_FILE" | awk '{print $2}')
     ACTIVATION="mamba activate ${ENV_NAME:-<unknown>}"
+    ENV_PREFIX=$(mamba run -n "$ENV_NAME" bash -c 'echo $CONDA_PREFIX')
 fi
 
-if [ $? -eq 0 ]; then
+if [ $INSTALL_STATUS -eq 0 ]; then
+    # Install any activation hooks that live alongside the environment.yml
+    # (e.g. mamba-environment/<course>/activate.d/*.sh). These run automatically
+    # every time this environment is activated - see:
+    # https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html#saving-environment-variables
+    ACTIVATE_D_SRC="$(dirname "$ENV_FILE")/activate.d"
+    if [ -d "$ACTIVATE_D_SRC" ]; then
+        echo "Installing activation hooks from $ACTIVATE_D_SRC into $ENV_PREFIX/etc/conda/activate.d/"
+        mkdir -p "$ENV_PREFIX/etc/conda/activate.d"
+        cp "$ACTIVATE_D_SRC"/*.sh "$ENV_PREFIX/etc/conda/activate.d/"
+        chmod +x "$ENV_PREFIX/etc/conda/activate.d/"*.sh
+    fi
+
     echo ""
     echo "✅ Environment installation complete!"
     echo ""
