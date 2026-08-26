@@ -1,4 +1,4 @@
-# MCB 128 (AI in Molecular Biology) - GPU mamba environment.
+# MCB 128: AI in Molecular Biology - GPU mamba environment.
 # Provisional / starter list: based on the apphy275 GPU pattern (lean DS stack +
 # CUDA torch via cu128 pip wheels) plus scikit-learn for an AI/ML course.
 # PENDING: instructor (Elena Rivas) full package list — only "PyTorch" was
