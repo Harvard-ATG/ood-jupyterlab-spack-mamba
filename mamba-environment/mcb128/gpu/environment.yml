@@ -1,5 +1,4 @@
-# MCB 128: AI in Molecular Biology - GPU mamba env (apphy275 cu128 pattern).
-# Provisional: pending the instructor's full package list.
+# MCB 128: AI in Molecular Biology - GPU (CUDA) mamba env. Provisional.
 name: mcb128-gpu
 
 channels:
