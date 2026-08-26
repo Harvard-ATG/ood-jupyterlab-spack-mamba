@@ -1,11 +1,9 @@
 # Jupyter app user-facing configuration form file (MCB 128, GPU)
 
 # MCB 128 - AI in Molecular Biology (Canvas 173764).
-# Derived from local/cs1090b-gpu.yml.erb. This sub-app uses a purpose-built,
-# GLOBAL gpu mamba env `mcb128-gpu` (environment hard-coded to "global"), built
-# from mamba-environment/mcb128/gpu/environment.yml. We build our own (rather
-# than reuse cs1090b-gpu/bst236) because those only exist on stage as a holdover
-# and are NOT present in prod.
+# This sub-app uses a purpose-built, GLOBAL gpu mamba env `mcb128-gpu`
+# (environment hard-coded to "global"), built from
+# mamba-environment/mcb128/gpu/environment.yml.
 <%-
 # Specify admin groups by the full name of the group in the production HKey environment.
 adminGroups = [
@@ -87,8 +85,7 @@ attributes:
   bc_queue: "gpu"
 
   # Hard-coded to "global": MCB 128 uses the system-managed global mamba env and
-  # does not manage its own Spack/mamba env in a course shared folder. (This is
-  # the difference from cs1090b-gpu, which offers a course/global toggle.)
+  # does not manage its own Spack/mamba env in a course shared folder.
   environment: "global"
 
   # How many CPU cores to include in the slurm job submission
