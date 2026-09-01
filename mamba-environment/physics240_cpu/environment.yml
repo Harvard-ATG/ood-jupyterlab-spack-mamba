@@ -16,6 +16,5 @@ dependencies:
 - huggingface-hub
 - networkx
 - scikit-learn
-- pip:
-  - torch
-  - torchvision
+- pytorch
+- torchvision
