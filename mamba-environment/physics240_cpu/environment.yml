@@ -1,0 +1,21 @@
+name: jupyter
+
+channels:
+- conda-forge
+
+dependencies:
+- jupyterlab
+- numpy
+- pandas
+- matplotlib
+- seaborn
+- scipy
+- pip
+- python>=3.10
+- requests
+- huggingface-hub
+- networkx
+- scikit-learn
+- pip:
+  - torch
+  - torchvision
