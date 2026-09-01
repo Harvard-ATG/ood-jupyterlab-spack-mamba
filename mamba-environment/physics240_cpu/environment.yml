@@ -13,8 +13,9 @@ dependencies:
 - pip
 - python>=3.10
 - requests
-- huggingface-hub
 - networkx
 - scikit-learn
 - pytorch
 - torchvision
+- pip:
+  - huggingface-hub
