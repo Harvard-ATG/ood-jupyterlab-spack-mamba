@@ -17,9 +17,7 @@ dependencies:
 - tqdm
 - pip
 - pip:
-  # --index-url on its OWN line applies to ALL packages below. The per-line form
-  # (`torch --index-url ...`) is NOT honored in a conda environment.yml pip section, so torch had
-  # resolved from PyPI as +cu130, giving torch.cuda.is_available()=False.
+  # --index-url must be on its own line to apply to every package below.
   # cu12.8 is compatible with both drivers in use: A10G/R570 (stage) and R580 (prod).
   - --index-url https://download.pytorch.org/whl/cu128
   - torch
