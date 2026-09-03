@@ -95,8 +95,12 @@ attributes:
   # be hard-coded to "global".
   environment: "global"
 
-  # How many CPU cores to include in the slurm job submission
-  custom_num_cores: 12
+  # How many CPU cores to include in the slurm job submission.
+  # The single-GPU queues are all *.2xlarge (g5/g6/g7e) = 8 cores per GPU, so 8 is
+  # the ceiling here. Above it the job is unschedulable and the app fails to submit:
+  #   sbatch: error: CPU count per node can not be satisfied
+  # 12 is the ratio on the multi-GPU gpu-parallel nodes (48 cores / 4 GPUs), not this queue.
+  custom_num_cores: 8
   # How many GPU GRES resources to include in the job submission.
   custom_num_gpus: 1
 
