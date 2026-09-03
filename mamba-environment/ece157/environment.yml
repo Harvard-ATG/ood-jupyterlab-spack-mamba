@@ -1,4 +1,4 @@
-name: engsci157
+name: ece157
 
 channels:
 - conda-forge
