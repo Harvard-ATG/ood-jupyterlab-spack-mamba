@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --job-name=mamba-install
-#SBATCH --output=mamba-install-%j.out
-#SBATCH --error=mamba-install-%j.err
+#SBATCH --output=mamba-install-%j.log
+#SBATCH --error=mamba-install-%j.log
 #SBATCH --time=01:00:00
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=4
