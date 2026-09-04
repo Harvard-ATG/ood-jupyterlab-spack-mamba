@@ -50,13 +50,13 @@ end
 # a non-existant cluster.
 cluster: "<%= cluster %>"
 
-title: "Jupyter Lab - MCB 128 (GPU, CUDA 12.8)"
+title: "Jupyter Lab - MCB 128 (GPU)"
 description: |
   This app is configured for GPU access for MCB 128: AI in Molecular Biology.
 
   This app will launch a Jupyter Notebook server on one or more nodes. This
   configuration uses [Spack](https://spack.io/) to load a
-  [Mamba](https://mamba.readthedocs.io/en/latest/index.html) environment to then load Jupyter Lab and was built for the course MCB 128.
+  [Mamba](https://mamba.readthedocs.io/en/latest/index.html) environment to then load Jupyter Lab.
   <br/><br/>
   The app launches outside of a container, so it has access to slurm commands, but
   since the app is running as a slurm job, the `srun` command will use the
