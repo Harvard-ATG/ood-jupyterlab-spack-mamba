@@ -1,0 +1,22 @@
+# MCB 128 — candidate B: CUDA 13.0 via conda-forge, no pip.
+# PROD ONLY — cuda130 requires driver R580; stage's R570 cannot run it.
+# Same stack PHYSICS 240 uses. pytorch-gpu is the metapackage that guarantees a CUDA build.
+name: mcb128-gpu-cuda130
+
+channels:
+- conda-forge
+
+dependencies:
+- python=3.12
+- jupyterlab
+- numpy
+- pandas
+- scipy
+- matplotlib
+- seaborn
+- scikit-learn
+- requests
+- tqdm
+- pytorch-gpu
+- torchvision
+- torchaudio

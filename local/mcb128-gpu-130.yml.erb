@@ -15,9 +15,20 @@ adminGroups = [
 ]
 # Specify course groups by Canvas course ID, which you can find in a url:
 # canvas.harvard.edu/courses/000000
-enabledGroups = [
-  "173764"
-]
+# ADMIN GATED. enabledGroups is deliberately EMPTY, so the only path to
+# cluster="*" is membership of adminGroups above. Everyone else resolves to
+# "disable_this_app" and does not see this app.
+#
+# Why: this is the CUDA 13.0 build. It runs only in prod — stage's driver (570,
+# ceiling CUDA 12.8) cannot load it — so it cannot be validated in the staging
+# environment. It is kept available to admins so it is ready the moment stage's
+# AMI is updated, without needing a rebuild.
+#
+# Students use local/mcb128-gpu-128.yml.erb, which is course-gated.
+#
+# Note this is a VISIBILITY gate, not a security boundary — it is app config.
+# Real enforcement is the Slurm partition AllowGroups and file permissions.
+enabledGroups = []
 
 def arrays_have_common_element(array1, array2)
   # Use the `&` operator to get the intersection of the two arrays
@@ -50,7 +61,7 @@ end
 # a non-existant cluster.
 cluster: "<%= cluster %>"
 
-title: "Jupyter Lab - MCB 128 (GPU)"
+title: "Jupyter Lab - MCB 128 (GPU, CUDA 13.0)"
 description: |
   This app is configured for GPU access for MCB 128: AI in Molecular Biology.
 
@@ -81,7 +92,7 @@ attributes:
   spack: "mamba-gpu"
 
   # mamba environment to activate from inside the Spack environment
-  mamba: "mcb128-gpu"
+  mamba: "mcb128-gpu-cuda130"
 
   # Which queue to submit to. Usually `general` is the best choice, unless this
   # app is configured for a specific EC2 instance type, like an instance type

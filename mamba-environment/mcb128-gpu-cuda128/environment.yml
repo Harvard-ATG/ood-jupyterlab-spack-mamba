@@ -1,5 +1,6 @@
-# MCB 128: AI in Molecular Biology - GPU (CUDA) mamba env. Provisional.
-name: mcb128-gpu
+# MCB 128 — candidate A: CUDA 12.8 via the PyTorch pip wheel index.
+# Stage-compatible (driver R570 tops out at 12.8) and prod-compatible (R580, backward compatible).
+name: mcb128-gpu-cuda128
 
 channels:
 - conda-forge
