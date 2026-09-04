@@ -1,6 +1,19 @@
-# MCB 128 — candidate B: CUDA 13.0 via conda-forge, no pip.
-# PROD ONLY — cuda130 requires driver R580; stage's R570 cannot run it.
-# Same stack PHYSICS 240 uses. pytorch-gpu is the metapackage that guarantees a CUDA build.
+# MCB 128 — the CUDA 13.0 alternative. Built and validated, but NOT the course environment.
+#
+# There is deliberately no sub-app form pointing at this. The course runs on
+# mcb128-gpu-cuda128 (CUDA 12.8), which is the newest CUDA that both stage
+# (driver R570, ceiling 12.8) and prod (R580) can run — so the course can be
+# tested in stage before students use it.
+#
+# This one requires R580 and therefore runs in prod only. It is kept here so it
+# is ready the moment stage's AMI is updated: to switch, point the course form's
+# `mamba:` attribute at mcb128-gpu-cuda130. No second form is needed.
+#
+# pytorch-gpu is the metapackage that guarantees a CUDA build. Unpinned it
+# resolves the same as bare `pytorch`, but if a `cuda-version=` pin is ever added
+# here, bare `pytorch` silently installs CPU builds with no error.
+#
+# Same stack PHYSICS 240 uses.
 name: mcb128-gpu-cuda130
 
 channels:
