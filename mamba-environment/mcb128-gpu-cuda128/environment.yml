@@ -1,0 +1,26 @@
+# MCB 128 — candidate A: CUDA 12.8 via the PyTorch pip wheel index.
+# Stage-compatible (driver R570 tops out at 12.8) and prod-compatible (R580, backward compatible).
+name: mcb128-gpu-cuda128
+
+channels:
+- conda-forge
+
+dependencies:
+- python=3.12
+- jupyterlab
+- numpy
+- pandas
+- scipy
+- matplotlib
+- seaborn
+- scikit-learn
+- requests
+- tqdm
+- pip
+- pip:
+  # --index-url must be on its own line to apply to every package below.
+  # cu12.8 is compatible with both drivers in use: A10G/R570 (stage) and R580 (prod).
+  - --index-url https://download.pytorch.org/whl/cu128
+  - torch
+  - torchvision
+  - torchaudio
