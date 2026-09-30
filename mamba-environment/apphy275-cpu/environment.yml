@@ -1,0 +1,27 @@
+# APPHY 275 — CPU environment, activated by the interactive Jupyter sub-app.
+# python is PINNED: an unbounded 'python>=3.10' resolved to 3.14.7 free-threaded (cp314t)
+# on 2026-09-23, and no PyTorch index publishes cp314t wheels.
+name: apphy275-cpu
+
+channels:
+- conda-forge
+
+dependencies:
+- python=3.12
+- jupyterlab
+- numpy
+- pandas
+- matplotlib
+- seaborn
+- scipy
+- requests
+- pip
+- pip:
+  # --index-url must be on its own line to apply to every package below.
+  # Appending it to a package line (the Spring 2026 form) is SILENTLY IGNORED:
+  # pip treats --index-url as a global option, so the env got whatever the
+  # default index served -- torch 2.14.0+cu130 on 2026-09-23.
+  - --index-url https://download.pytorch.org/whl/cpu
+  - torch
+  - torchvision
+  - torchaudio
