@@ -15,12 +15,19 @@ adminGroups = [
 ]
 # Specify course groups by Canvas course ID, which you can find in a url:
 # canvas.harvard.edu/courses/000000
+# FACULTY-ONLY SOFT LAUNCH: the member gate is empty, so students do not see this
+# app yet. To open it to the class, put "172713" back into enabledGroups.
 enabledGroups = [
   # Cannot have multiple enabled groups if a spack installation in the course 
   # shared folder is in use. This is because the course installation uses the 
   # course shared folder, which is not accessible to users outside of that 
   # course.
-  "172713"
+  # "172713"
+]
+# Staff groups are matched by FULL group name (the canvas-ID regex below does not
+# match "-staff-" names), so teaching staff can see the app before students do.
+staffGroups = [
+  "canvas172713-staff-1182150" # APCOMP 297R teaching staff
 ]
 
 def arrays_have_common_element(array1, array2)
@@ -30,8 +37,8 @@ def arrays_have_common_element(array1, array2)
 end
 
 userGroups = OodSupport::User.new.groups.sort_by(&:id).map(&:name)
-# First check if the user is in an admin group
-if arrays_have_common_element(userGroups, adminGroups)
+# First check if the user is in an admin group or a course staff group
+if arrays_have_common_element(userGroups, adminGroups) || arrays_have_common_element(userGroups, staffGroups)
   cluster="*"
 else
   # If the user is not in an admin group, check if they're in an authorized Canvas group
