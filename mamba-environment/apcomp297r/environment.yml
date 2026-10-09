@@ -11,7 +11,7 @@ dependencies:
 - seaborn
 - scipy
 - pip
-- python=3.12   # pinned: unpinned resolves to free-threaded 3.14t (cp314t), conflict with pytorch
+- python=3.12   # pinned: unpinned resolves to free-threaded 3.14, conflict with pytorch
 - requests
 - r-base
 - r-irkernel
