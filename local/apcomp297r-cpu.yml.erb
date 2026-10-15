@@ -15,14 +15,12 @@ adminGroups = [
 ]
 # Specify course groups by Canvas course ID, which you can find in a url:
 # canvas.harvard.edu/courses/000000
-# FACULTY-ONLY SOFT LAUNCH: the member gate is empty, so students do not see this
-# app yet. To open it to the class, put "172713" back into enabledGroups.
 enabledGroups = [
   # Cannot have multiple enabled groups if a spack installation in the course 
   # shared folder is in use. This is because the course installation uses the 
   # course shared folder, which is not accessible to users outside of that 
   # course.
-  # "172713"
+  "172713"
 ]
 # Staff groups are matched by FULL group name (the canvas-ID regex below does not
 # match "-staff-" names), so teaching staff can see the app before students do.
