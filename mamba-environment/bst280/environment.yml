@@ -1,0 +1,28 @@
+name: bst280
+
+channels:
+- conda-forge
+
+dependencies:
+- jupyterlab
+- numpy<2
+- pandas
+- matplotlib
+- seaborn
+- scipy
+- pip
+- python=3.12
+- requests
+# netZooPy dependencies, from conda-forge so that pip installs only netZooPy
+- pytorch=*=cpu*
+- h5py
+- networkx
+- joblib
+- statsmodels
+- click
+- pytables
+- python-igraph
+# netZooPy 0.11.0 imports pkg_resources, which setuptools 81 and later removed
+- setuptools<81
+- pip:
+  - netZooPy==0.11.0
